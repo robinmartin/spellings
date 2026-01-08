@@ -5,7 +5,902 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spelling Tester</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg1: #0b1024;
+      --bg2: #161b3a;
+      --card: #0f1635cc;
+      --stroke: #2b3a78;
+      --text: #eef2ff;
+      --muted: #b8c2ff;
+      --accent: #7c5cff;
+      --accent2: #2ee9a6;
+      --warn: #ffcf5a;
+      --shadow: 0 20px 60px rgba(0, 0, 0, .45);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1400px 900px at 20% 10%, rgba(124, 92, 255, .45), transparent 60%),
+        radial-gradient(1000px 800px at 90% 30%, rgba(46, 233, 166, .25), transparent 55%),
+        radial-gradient(900px 700px at 50% 110%, rgba(255, 207, 90, .18), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: fixed;
+      filter: blur(40px);
+      opacity: .55;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      transform: translateZ(0);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .blob.b1 {
+      width: 360px;
+      height: 360px;
+      left: -120px;
+      top: 120px;
+      background: rgba(124, 92, 255, .65);
+      animation-duration: 22s
+    }
+
+    .blob.b2 {
+      width: 420px;
+      height: 420px;
+      right: -160px;
+      top: -120px;
+      background: rgba(46, 233, 166, .45);
+      animation-duration: 26s
+    }
+
+    .blob.b3 {
+      width: 420px;
+      height: 420px;
+      left: 30%;
+      bottom: -220px;
+      background: rgba(255, 207, 90, .35);
+      animation-duration: 24s
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(0, 0, 0) rotate(0deg)
+      }
+
+      to {
+        transform: translate3d(60px, -30px, 0) rotate(18deg)
+      }
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px 80px;
+      position: relative;
+    }
+
+    .topbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      z-index: 5;
+      pointer-events: none;
+      gap: 16px;
+    }
+
+    .topbar .pill {
+      pointer-events: auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(15, 22, 53, .55);
+      backdrop-filter: blur(14px);
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+    }
+
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .75), rgba(255, 255, 255, .0) 55%),
+        linear-gradient(135deg, var(--accent), #3aa3ff);
+      box-shadow: 0 10px 24px rgba(124, 92, 255, .35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo:after {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle at 40% 40%, rgba(46, 233, 166, .45), transparent 45%);
+      animation: shimmer 3.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes shimmer {
+      from {
+        transform: translate(-8px, 8px)
+      }
+
+      to {
+        transform: translate(8px, -8px)
+      }
+    }
+
+    .title {
+      font-weight: 800;
+      letter-spacing: .2px;
+      font-size: 14px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      opacity: .95;
+    }
+
+    .card {
+      width: min(980px, 100%);
+      border-radius: var(--radius);
+      background: rgba(15, 22, 53, .9);
+      border: 1px solid rgba(255, 255, 255, 1);
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, .1) inset;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      position: relative;
+      overflow: hidden;
+      transform: translateY(8px);
+      opacity: 0;
+      animation: popIn .55s cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    @keyframes popIn {
+      to {
+        transform: translateY(0);
+        opacity: 1
+      }
+    }
+
+    .card:before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: radial-gradient(900px 400px at 10% 0%, rgba(124, 92, 255, .22), transparent 60%),
+        radial-gradient(700px 380px at 90% 30%, rgba(46, 233, 166, .14), transparent 60%),
+        radial-gradient(700px 420px at 50% 110%, rgba(255, 207, 90, .12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pane {
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(8, 12, 28, .35);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 18px;
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .2);
+    }
+
+    .h1 {
+      font-size: 30px;
+      font-weight: 900;
+      margin: 2px 0 10px;
+      line-height: 1.08;
+      letter-spacing: -0.4px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      margin: 0 0 14px
+    }
+
+    .modes {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px
+    }
+
+    .mode {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .04);
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, .06)
+    }
+
+    .mode:active {
+      transform: translateY(0)
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      position: relative;
+      background: linear-gradient(135deg, rgba(124, 92, 255, .95), rgba(58, 163, 255, .75));
+      box-shadow: 0 12px 28px rgba(124, 92, 255, .25);
+    }
+
+    .icon.kid {
+      background: linear-gradient(135deg, rgba(46, 233, 166, .95), rgba(58, 163, 255, .55));
+      box-shadow: 0 12px 28px rgba(46, 233, 166, .18)
+    }
+
+    .mode h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 850
+    }
+
+    .mode p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      transition: transform .15s cubic-bezier(0.4, 0, 0.2, 1), 
+                  background .15s ease, 
+                  border-color .15s ease,
+                  box-shadow .15s ease;
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, .1), transparent 70%);
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, .1);
+      border-color: rgba(255, 255, 255, .22);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    }
+
+    .btn:hover::before {
+      opacity: 1;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      transition: transform .08s ease;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-color: var(--accent);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(124, 92, 255, .96), rgba(58, 163, 255, .75));
+      border-color: rgba(255, 255, 255, .22);
+      box-shadow: 0 18px 36px rgba(124, 92, 255, .22);
+    }
+
+    .btn.primary:hover {
+      filter: saturate(1.05)
+    }
+
+    .btn.green {
+      background: linear-gradient(135deg, rgba(46, 233, 166, .95), rgba(58, 163, 255, .55));
+      box-shadow: 0 18px 36px rgba(46, 233, 166, .12);
+    }
+
+    .btn.warn {
+      background: linear-gradient(135deg, rgba(255, 207, 90, .92), rgba(255, 120, 120, .55));
+      box-shadow: 0 18px 36px rgba(255, 207, 90, .14);
+      color: #11152a;
+      border-color: rgba(255, 255, 255, .18);
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    select.btn {
+      appearance: none;
+      display: block;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='rgba(255,255,255,.85)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 8px;
+      padding-right: 40px;
+      cursor: pointer;
+      transition: border-color .2s ease, background-color .2s ease;
+    }
+
+    select.btn {
+      transform: none !important;
+    }
+
+    select.btn:hover {
+      border-color: rgba(255, 255, 255, .25);
+      background-color: rgba(255, 255, 255, .08);
+      transform: none !important;
+    }
+
+    select.btn::before {
+      display: none !important;
+      content: none !important;
+    }
+
+    select.btn:hover::before {
+      display: none !important;
+      content: none !important;
+    }
+
+    select.btn:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: rgba(255, 255, 255, .08);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, .2);
+    }
+
+    select.btn option {
+      background: var(--bg2);
+      color: var(--text);
+    }
+
+    .kbd {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .75);
+      border: 1px solid rgba(255, 255, 255, .18);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .18)
+    }
+
+    .stage {
+      padding: 22px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+
+
+    .stageTop {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      position: relative;
+    }
+
+    .stageTop > :first-child {
+      flex: 0 0 auto;
+    }
+
+    .progressWrap {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+    }
+
+    .progressWrap .iconBtn {
+      position: absolute;
+      right: 0;
+      display: flex !important;
+    }
+
+    .progressText {
+      margin: 0;
+    }
+
+    /* Desktop: show refresh button in stageTop */
+    .stageTop > .iconBtn {
+      display: flex;
+    }
+
+    .iconBtn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      flex-shrink: 0;
+      transition: transform .2s cubic-bezier(0.4, 0, 0.2, 1),
+                  background .2s ease,
+                  border-color .2s ease;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .iconBtn:hover {
+      background: rgba(255, 255, 255, .15);
+      border-color: rgba(255, 255, 255, .3);
+      transform: scale(1.05);
+    }
+
+    .iconBtn:active {
+      transform: scale(0.95);
+    }
+
+    .iconBtn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .iconBtn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.5;
+      stroke: rgba(255, 255, 255, .9);
+      transition: stroke .2s ease;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .iconBtn:hover svg {
+      stroke: rgba(255, 255, 255, 1);
+    }
+
+    /* Ensure icon is visible on mobile */
+    @media (max-width: 768px) {
+      .iconBtn svg {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    }
+
+    .progressText {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: color .2s ease;
+    }
+
+    .progressWrap:hover .progressText {
+      color: var(--text);
+    }
+
+    .progress {
+      width: 280px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .12);
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, .1);
+      display: none;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124, 92, 255, .95), rgba(46, 233, 166, .85));
+      transition: width .4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: 0 0 10px rgba(124, 92, 255, .4);
+    }
+
+    .bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .wordBox {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      min-height: 200px;
+      width: 100%;
+      padding: 20px;
+      position: relative;
+    }
+
+    .wordBox::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: radial-gradient(circle at center, rgba(124, 92, 255, .05), transparent 70%);
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+
+    .wordBox:hover::before {
+      opacity: 1;
+    }
+
+
+    .word {
+      position: relative;
+      z-index: 1;
+      font-size: 64px;
+      font-weight: 950;
+      letter-spacing: -0.6px;
+      line-height: 1.05;
+      text-shadow: 0 16px 40px rgba(0, 0, 0, .35),
+                   0 0 20px rgba(124, 92, 255, .15);
+      transform: translateY(8px) scale(0.96);
+      opacity: 0;
+      animation: wordIn .4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      text-align: center;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    @keyframes wordIn {
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1
+      }
+    }
+
+    .bigPlay {
+      padding: 16px 32px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: linear-gradient(135deg, rgba(46, 233, 166, .95), rgba(58, 163, 255, .55));
+      box-shadow: 0 22px 44px rgba(46, 233, 166, .12);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform .12s ease;
+      position: relative;
+      overflow: hidden;
+      color: var(--text);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+
+    .bigPlay:hover {
+      transform: translateY(-2px)
+    }
+
+    .bigPlay:active {
+      transform: translateY(0)
+    }
+
+    .bigPlay:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .pulse {
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, .55), transparent 45%);
+      opacity: .0;
+      transform: scale(.9);
+      animation: pulse 2.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0;
+        transform: scale(.88)
+      }
+
+      35% {
+        opacity: .18
+      }
+
+      70% {
+        opacity: 0;
+        transform: scale(1.05)
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(.88)
+      }
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      padding-top: 8px;
+    }
+
+    .navBtnContainer {
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+    }
+
+    .iconNavBtn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 600;
+      min-width: 48px;
+    }
+
+    .iconNavBtn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .iconNavBtn:disabled:hover {
+      transform: none;
+      background: rgba(255, 255, 255, .06);
+      border-color: rgba(255, 255, 255, .16);
+    }
+
+    .footerNote {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4
+    }
+
+    /* Confetti canvas */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    /* Mobile responsive styles */
+    @media (max-width: 768px) {
+      .wrap {
+        padding: 16px 12px 60px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .stageTop {
+        gap: 8px;
+      }
+
+      .progressWrap {
+        gap: 8px;
+      }
+
+      .progressWrap .iconBtn {
+        position: absolute;
+        right: 0;
+        display: flex !important;
+      }
+
+      .progressText {
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .word {
+        font-size: 48px;
+        letter-spacing: -0.4px;
+      }
+
+      .wordBox {
+        min-height: 150px;
+        gap: 16px;
+      }
+
+      .nav {
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px; /* Touch-friendly */
+      }
+
+      #filterSelect {
+        min-width: 100%;
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+
+      .iconBtn {
+        width: 44px;
+        height: 44px;
+      }
+
+      .iconBtn svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .progressText {
+        font-size: 11px;
+      }
+
+      .navBtnContainer {
+        width: 44px;
+        height: 44px;
+      }
+
+      .nav .iconNavBtn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wrap {
+        padding: 12px 8px 50px;
+      }
+
+      .card {
+        padding: 14px;
+      }
+
+      .word {
+        font-size: 44px;
+        letter-spacing: -0.3px;
+      }
+
+      .wordBox {
+        min-height: 120px;
+        gap: 12px;
+      }
+
+      .nav {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px 20px;
+      }
+
+      .stageTop {
+        gap: 12px;
+      }
+
+      .progress {
+        height: 8px;
+      }
+    }
+
+    /* Motion prefs */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+
+      .card {
+        opacity: 1;
+        transform: none
+      }
+
+      #confetti {
+        display: none
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -165,7 +1060,453 @@
 ]
   </script>
 
-  <script src="script.js"></script>
+  <script>
+// ----------------------
+// Data
+// ----------------------
+let WORDS_DATA = null;
+let WORDS = [];
+
+// ----------------------
+// Elements
+// ----------------------
+const el = {
+  filterSelect: document.getElementById("filterSelect"),
+
+  progressText: document.getElementById("progressText"),
+  progressBar: document.getElementById("progressBar"),
+  progress: document.querySelector(".progress"),
+
+  wordArea: document.getElementById("wordArea"),
+
+  prevBtn: document.getElementById("prevBtn"),
+  nextBtn: document.getElementById("nextBtn"),
+  startNewBtn: document.getElementById("startNewBtn"),
+
+  confetti: document.getElementById("confetti"),
+};
+
+// ----------------------
+// State
+// ----------------------
+let selectedFilter = "all";
+let order = []; // current session order (array of words)
+let index = 0;
+
+// ----------------------
+// Helpers
+// ----------------------
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ----------------------
+// LocalStorage persistence
+// ----------------------
+const STORAGE_KEY = "spellingTesterState";
+
+function saveState() {
+  try {
+    const state = {
+      order: order,
+      filter: selectedFilter,
+      index: index
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.error("Error saving state:", error);
+  }
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const state = JSON.parse(saved);
+      return state;
+    }
+  } catch (error) {
+    console.error("Error loading state:", error);
+  }
+  return null;
+}
+
+function clearState() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error("Error clearing state:", error);
+  }
+}
+
+
+
+function progress() {
+  const total = order.length;
+  const n = Math.min(total, Math.max(1, index + 1));
+  el.progressText.textContent = `${n} / ${total}`;
+  const pct = total ? (n / total) * 100 : 0;
+  el.progressBar.style.width = `${pct}%`;
+  el.progress.setAttribute("aria-valuenow", String(Math.round(pct)));
+  
+  // Enable/disable navigation buttons based on position
+  if (total > 0) {
+    el.prevBtn.disabled = index === 0;
+    el.nextBtn.disabled = index === total - 1;
+  } else {
+    el.prevBtn.disabled = true;
+    el.nextBtn.disabled = true;
+  }
+}
+
+function currentWord() {
+  return order[index];
+}
+
+function renderWord() {
+  const w = currentWord();
+  el.wordArea.innerHTML = "";
+
+  const word = document.createElement("div");
+  word.className = "word";
+  word.textContent = w;
+  el.wordArea.appendChild(word);
+
+  progress();
+  saveState(); // Save state after rendering
+}
+
+function getWordsForFilter(filter) {
+  if (!WORDS_DATA || !Array.isArray(WORDS_DATA)) return [];
+
+  if (filter === "all") {
+    // Return all words
+    return WORDS_DATA.map(item => item.word);
+  } else if (filter === "learned") {
+    // Return words that have a value in au1, au2, or sp1
+    return WORDS_DATA
+      .filter(item => {
+        const hasAu1 = item.au1 !== undefined && item.au1 !== null && item.au1 !== "";
+        const hasAu2 = item.au2 !== undefined && item.au2 !== null && item.au2 !== "";
+        const hasSp1 = item.sp1 !== undefined && item.sp1 !== null && item.sp1 !== "";
+        return hasAu1 || hasAu2 || hasSp1;
+      })
+      .map(item => item.word);
+  } else if (filter === "not-learned") {
+    // Return words that have null in all of au1, au2, and sp1
+    return WORDS_DATA
+      .filter(item => {
+        const hasAu1 = item.au1 !== undefined && item.au1 !== null && item.au1 !== "";
+        const hasAu2 = item.au2 !== undefined && item.au2 !== null && item.au2 !== "";
+        const hasSp1 = item.sp1 !== undefined && item.sp1 !== null && item.sp1 !== "";
+        return !hasAu1 && !hasAu2 && !hasSp1;
+      })
+      .map(item => item.word);
+  } else {
+    // Only return words that have a value in the selected filter column
+    return WORDS_DATA
+      .filter(item => item[filter] !== undefined && item[filter] !== null && item[filter] !== "")
+      .map(item => item.word);
+  }
+}
+
+function startSession(restoreFromStorage = false) {
+  WORDS = getWordsForFilter(selectedFilter);
+
+  if (!WORDS || WORDS.length === 0) {
+    return;
+  }
+
+  if (restoreFromStorage) {
+    const savedState = loadState();
+    if (savedState && savedState.filter === selectedFilter && savedState.order && savedState.order.length > 0) {
+      // Verify that the saved order contains valid words from current filter
+      const validWords = new Set(WORDS);
+      const savedOrderValid = savedState.order.every(word => validWords.has(word));
+
+      if (savedOrderValid && savedState.index >= 0 && savedState.index < savedState.order.length) {
+        order = savedState.order;
+        index = savedState.index;
+        renderWord();
+        return;
+      }
+    }
+  }
+
+  // Start fresh if no valid saved state
+  index = 0;
+  order = shuffle(WORDS);
+  renderWord();
+}
+
+function resetSession() {
+  WORDS = getWordsForFilter(selectedFilter);
+  if (!WORDS || WORDS.length === 0) {
+    return;
+  }
+  index = 0;
+  order = shuffle(WORDS);
+  renderWord();
+  saveState();
+}
+
+function startNewSession() {
+  clearState();
+  WORDS = getWordsForFilter(selectedFilter);
+  if (!WORDS || WORDS.length === 0) {
+    return;
+  }
+  index = 0;
+  order = shuffle(WORDS);
+  renderWord();
+  saveState();
+}
+
+
+// ----------------------
+// Confetti (tiny, no deps)
+// ----------------------
+const confetti = {
+  running: false,
+  parts: [],
+  raf: 0,
+  t0: 0,
+};
+
+function confettiBurst() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const c = el.confetti;
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const w = Math.floor(window.innerWidth);
+  const h = Math.floor(window.innerHeight);
+  c.width = Math.floor(w * dpr);
+  c.height = Math.floor(h * dpr);
+  c.style.opacity = "1";
+
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  confetti.parts = [];
+  const count = 140;
+  for (let i = 0; i < count; i++) {
+    confetti.parts.push({
+      x: w / 2 + (Math.random() - 0.5) * 60,
+      y: h * 0.18 + (Math.random() - 0.5) * 20,
+      vx: (Math.random() - 0.5) * 9,
+      vy: Math.random() * -6 - 3,
+      g: 0.22 + Math.random() * 0.16,
+      size: 5 + Math.random() * 7,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.25,
+      life: 1.0,
+    });
+  }
+
+  confetti.running = true;
+  confetti.t0 = performance.now();
+
+  const loop = (t) => {
+    if (!confetti.running) return;
+    const dt = Math.min(32, t - (confetti.lastT || t));
+    confetti.lastT = t;
+
+    ctx.clearRect(0, 0, w, h);
+
+    for (const p of confetti.parts) {
+      p.vy += p.g * (dt / 16);
+      p.x += p.vx * (dt / 16);
+      p.y += p.vy * (dt / 16);
+      p.rot += p.vr * (dt / 16);
+      p.life -= 0.0065 * (dt / 16);
+
+      // wrap slightly
+      if (p.x < -40) p.x = w + 40;
+      if (p.x > w + 40) p.x = -40;
+
+      const alpha = Math.max(0, Math.min(1, p.life));
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+
+      // Use a gradient-ish fill without hardcoding colors: derive from background palette via HSL.
+      const hue = 220 + Math.random() * 120;
+      ctx.fillStyle = `hsla(${hue}, 90%, 65%, ${alpha})`;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+
+      ctx.restore();
+    }
+
+    // stop after ~2.6s
+    if (t - confetti.t0 > 2600) {
+      confetti.running = false;
+      c.style.opacity = "0";
+      return;
+    }
+
+    confetti.raf = requestAnimationFrame(loop);
+  };
+
+  cancelAnimationFrame(confetti.raf);
+  confetti.raf = requestAnimationFrame(loop);
+}
+
+// ----------------------
+// Events
+// ----------------------
+// Filter selection - reset and restart when changed
+el.filterSelect?.addEventListener("change", (e) => {
+  selectedFilter = e.target.value;
+  resetSession();
+});
+
+el.prevBtn.addEventListener("click", () => {
+  if (!el.prevBtn.disabled && index > 0) {
+    index--;
+    renderWord();
+  }
+});
+
+el.nextBtn.addEventListener("click", () => {
+  if (!el.nextBtn.disabled && index < order.length - 1) {
+    index++;
+    renderWord();
+  }
+});
+
+el.startNewBtn.addEventListener("click", () => {
+  startNewSession();
+});
+
+// Keyboard shortcuts
+window.addEventListener("keydown", (e) => {
+  if (order.length > 0) {
+    if (e.key === "ArrowLeft") { el.prevBtn.click(); }
+    if (e.key === "ArrowRight") { el.nextBtn.click(); }
+  }
+});
+
+// Resize confetti canvas if active
+window.addEventListener('resize', () => {
+  if (confetti.running) {
+    confetti.running = false;
+    el.confetti.style.opacity = "0";
+  }
+});
+
+// Filter display names
+const FILTER_NAMES = {
+  "all": "All Words",
+  "learned": "Covered",
+  "not-learned": "Not Covered",
+  "au1": "Autumn 1",
+  "au2": "Autumn 2",
+  "sp1": "Spring 1",
+  "sp2": "Spring 2",
+  "su1": "Summer 1",
+  "su2": "Summer 2"
+};
+
+// Get available filters (filters that have at least one word)
+function getAvailableFilters() {
+  if (!WORDS_DATA || !Array.isArray(WORDS_DATA)) return [];
+
+  const availableFilters = new Set();
+  const allFilters = ["au1", "au2", "sp1", "sp2", "su1", "su2"];
+
+  WORDS_DATA.forEach(item => {
+    allFilters.forEach(filter => {
+      if (item[filter] !== undefined && item[filter] !== null && item[filter] !== "") {
+        availableFilters.add(filter);
+      }
+    });
+  });
+
+  return Array.from(availableFilters).sort();
+}
+
+// Populate filter dropdown
+function populateFilters() {
+  if (!el.filterSelect) return;
+
+  // Clear existing options
+  el.filterSelect.innerHTML = '';
+
+  // Add "All Words" option
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = FILTER_NAMES["all"];
+  el.filterSelect.appendChild(allOption);
+
+  // Add computed filters
+  const learnedOption = document.createElement("option");
+  learnedOption.value = "learned";
+  learnedOption.textContent = FILTER_NAMES["learned"];
+  el.filterSelect.appendChild(learnedOption);
+
+  const notLearnedOption = document.createElement("option");
+  notLearnedOption.value = "not-learned";
+  notLearnedOption.textContent = FILTER_NAMES["not-learned"];
+  el.filterSelect.appendChild(notLearnedOption);
+
+  // Add available filters
+  const availableFilters = getAvailableFilters();
+  availableFilters.forEach(filter => {
+    const option = document.createElement("option");
+    option.value = filter;
+    option.textContent = FILTER_NAMES[filter] || filter;
+    el.filterSelect.appendChild(option);
+  });
+
+  // Set default to "au1" if available, otherwise "all"
+  if (availableFilters.includes("au1")) {
+    selectedFilter = "au1";
+    el.filterSelect.value = "au1";
+  } else {
+    selectedFilter = "all";
+    el.filterSelect.value = "all";
+  }
+}
+
+// Load words from embedded JSON
+function loadWords() {
+  try {
+    const wordsScript = document.getElementById('words-data');
+    if (wordsScript) {
+      WORDS_DATA = JSON.parse(wordsScript.textContent);
+      populateFilters();
+    } else {
+      throw new Error('Words data not found');
+    }
+  } catch (error) {
+    console.error('Error loading words:', error);
+  }
+}
+
+
+// Init
+selectedFilter = "au1"; // Default to Autumn 1
+loadWords();
+// Start immediately after words are loaded
+// Use a small delay to ensure DOM and filters are ready
+setTimeout(() => {
+  // Try to restore from localStorage first
+  const savedState = loadState();
+  if (savedState && savedState.filter) {
+    selectedFilter = savedState.filter;
+    if (el.filterSelect) {
+      el.filterSelect.value = selectedFilter;
+    }
+  }
+  startSession(true); // Pass true to attempt restoration
+}, 100);
+  </script>
 </body>
 
 </html>
