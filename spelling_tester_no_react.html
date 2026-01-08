@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spelling Tester</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <canvas id="confetti"></canvas>
+
+  <main class="wrap">
+    <section class="card stage" id="stagePane" aria-live="polite">
+      <div class="stageTop">
+        <select id="filterSelect" class="btn" style="padding: 10px 14px; min-width: 200px;">
+          <option value="all">All Words</option>
+        </select>
+        <div class="progressWrap">
+          <div class="progressText" id="progressText">0 / 0</div>
+          <div class="progress" aria-label="Progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+            aria-valuenow="0">
+            <div class="bar" id="progressBar"></div>
+          </div>
+          <button class="btn iconBtn" id="startNewBtn" type="button" aria-label="Start New">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4V10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M23 20V14H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14L18.36 18.36A9 9 0 0 1 3.51 15" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="wordBox" id="wordBox">
+        <div id="wordArea"></div>
+      </div>
+
+      <div class="nav">
+        <div class="navBtnContainer">
+          <button class="btn iconNavBtn" id="prevBtn" type="button" aria-label="Previous word">←</button>
+        </div>
+        <div class="navBtnContainer">
+          <button class="btn iconNavBtn" id="nextBtn" type="button" aria-label="Next word">→</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="application/json" id="words-data">
+[
+  {"word": "accompany", "master": 5, "au1": 1, "au2": null, "sp1": 1},
+  {"word": "aggressive", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "definite", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "appreciate", "master": 3, "au1": 1, "au2": null, "sp1": null},
+  {"word": "equipped", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "achieve", "master": 6, "au1": 1, "au2": null, "sp1": null},
+  {"word": "nuisance", "master": 4, "au1": null, "au2": null, "sp1": 1},
+  {"word": "recognise", "master": 1, "au1": null, "au2": null, "sp1": 1},
+  {"word": "communicate", "master": 6, "au1": 1, "au2": null, "sp1": null},
+  {"word": "harass", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "variety", "master": 4, "au1": null, "au2": null, "sp1": 1},
+  {"word": "ancient", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "occupy", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "occur", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "determined", "master": 1, "au1": 2, "au2": null, "sp1": null},
+  {"word": "profession", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "available", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "soldier", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "apparent", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "bargain", "master": 2, "au1": null, "au2": null, "sp1": 2},
+  {"word": "committee", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "desperate", "master": 2, "au1": null, "au2": null, "sp1": 2},
+  {"word": "amateur", "master": 6, "au1": null, "au2": null, "sp1": 2},
+  {"word": "category", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "especially", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "frequently", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "develop", "master": null, "au1": null, "au2": null, "sp1": 2},
+  {"word": "excellent", "master": 1, "au1": null, "au2": null, "sp1": 3},
+  {"word": "interfere", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "existence", "master": 1, "au1": null, "au2": null, "sp1": 3},
+  {"word": "pronunciation", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "sacrifice", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "secretary", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "signature", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "symbol", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "accommodate", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "competition", "master": 3, "au1": 2, "au2": null, "sp1": null},
+  {"word": "average", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "curiosity", "master": 3, "au1": 2, "au2": null, "sp1": null},
+  {"word": "criticise", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "environment", "master": 6, "au1": 2, "au2": null, "sp1": null},
+  {"word": "foreign", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "forty", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "leisure", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "disastrous", "master": 2, "au1": null, "au2": null, "sp1": 3},
+  {"word": "equipment", "master": 1, "au1": 3, "au2": null, "sp1": null},
+  {"word": "privilege", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "restaurant", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "stomach", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "system", "master": 3, "au1": null, "au2": null, "sp1": null},
+  {"word": "yacht", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "awkward", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "bruise", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "conscious", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "explanation", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "community", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "guarantee", "master": 6, "au1": null, "au2": null, "sp1": 3},
+  {"word": "government", "master": 1, "au1": 3, "au2": null, "sp1": null},
+  {"word": "conscience", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "programme", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "parliament", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "individual", "master": 5, "au1": 3, "au2": null, "sp1": null},
+  {"word": "shoulder", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "language", "master": 6, "au1": 3, "au2": null, "sp1": null},
+  {"word": "physical", "master": 1, "au1": 4, "au2": null, "sp1": null},
+  {"word": "dictionary", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "vegetable", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "vehicle", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "according", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "embarrass", "master": 2, "au1": null, "au2": null, "sp1": null},
+  {"word": "attached", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "cemetery", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "prejudice", "master": 3, "au1": 4, "au2": null, "sp1": null},
+  {"word": "controversy", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "convenience", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "identity", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "muscle", "master": 4, "au1": 4, "au2": null, "sp1": null},
+  {"word": "necessary", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "persuade", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "hindrance", "master": 1, "au1": null, "au2": null, "sp1": 4},
+  {"word": "sincere", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "sincerely", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "familiar", "master": 4, "au1": null, "au2": null, "sp1": null},
+  {"word": "suggest", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "twelfth", "master": 5, "au1": null, "au2": null, "sp1": null},
+  {"word": "opportunity", "master": 6, "au1": 4, "au2": null, "sp1": null},
+  {"word": "immediate", "master": 2, "au1": null, "au2": null, "sp1": 4},
+  {"word": "mischievous", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "neighbour", "master": 1, "au1": null, "au2": null, "sp1": null},
+  {"word": "recommend", "master": 4, "au1": 5, "au2": null, "sp1": null},
+  {"word": "immediately", "master": 2, "au1": null, "au2": null, "sp1": 4},
+  {"word": "correspond", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "interrupt", "master": 2, "au1": null, "au2": null, "sp1": 4},
+  {"word": "equip", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "rhyme", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "exaggerate", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "marvellous", "master": 3, "au1": null, "au2": null, "sp1": 5},
+  {"word": "queue", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "temperature", "master": 4, "au1": 5, "au2": null, "sp1": null},
+  {"word": "thorough", "master": 4, "au1": 5, "au2": null, "sp1": null},
+  {"word": "sufficient", "master": 5, "au1": 5, "au2": null, "sp1": null},
+  {"word": "lightning", "master": 4, "au1": null, "au2": null, "sp1": 5},
+  {"word": "rhythm", "master": 6, "au1": null, "au2": null, "sp1": null},
+  {"word": "relevant", "master": 5, "au1": null, "au2": null, "sp1": 5},
+  {"word": "adventurous", "master": null, "au1": null, "au2": null, "sp1": 5}
+]
+  </script>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
