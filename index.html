@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Spelling Tester</title>
   <style>
     :root {
@@ -791,19 +792,22 @@
       }
 
       .stageTop {
-        flex-direction: column;
-        gap: 12px;
-        align-items: stretch;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
       }
 
       .stageTop > :first-child {
-        width: 100%;
+        flex: 0 0 auto;
+        min-width: 0;
       }
 
       .progressWrap {
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+        justify-content: flex-end;
       }
 
       .progressWrap .iconBtn {
@@ -813,10 +817,13 @@
       }
 
       .progressText {
-        font-size: 14px;
+        font-size: 12px;
         white-space: nowrap;
-        flex: 1;
-        min-width: 0;
+        flex-shrink: 0;
+      }
+
+      .progress {
+        display: none;
       }
 
       .word {
@@ -841,10 +848,12 @@
       }
 
       #filterSelect {
-        width: 100%;
+        flex: 0 0 auto;
         min-width: 0;
-        padding: 12px 14px;
-        font-size: 14px;
+        max-width: 140px;
+        padding: 10px 12px;
+        padding-right: 32px;
+        font-size: 13px;
       }
 
       .iconBtn {
@@ -887,6 +896,21 @@
 
       .stage {
         padding: 12px;
+      }
+
+      .stageTop {
+        gap: 6px;
+      }
+
+      #filterSelect {
+        max-width: 120px;
+        padding: 8px 10px;
+        padding-right: 28px;
+        font-size: 12px;
+      }
+
+      .progressText {
+        font-size: 11px;
       }
 
       .word {
