@@ -22,13 +22,16 @@
     }
 
     * {
-      box-sizing: border-box
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
     html,
     body {
       height: 100%;
       touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
     [hidden] {
@@ -186,6 +189,8 @@
       transform: translateY(8px);
       opacity: 0;
       animation: popIn .55s cubic-bezier(.2, .8, .2, 1) forwards;
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
     @keyframes popIn {
@@ -328,6 +333,8 @@
       position: relative;
       overflow: hidden;
       font-size: 14px;
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
     .btn::before {
@@ -458,6 +465,8 @@
       justify-content: center;
       align-items: center;
       gap: 24px;
+      touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
 
@@ -657,6 +666,7 @@
       word-break: break-word;
       hyphens: auto;
       touch-action: manipulation;
+      -ms-touch-action: manipulation;
     }
 
     @keyframes wordIn {
@@ -1210,6 +1220,39 @@
   </script>
 
   <script>
+    // ----------------------
+    // Prevent double-tap zoom
+    // ----------------------
+    (function () {
+      let lastTouchEnd = 0;
+
+      // Prevent double-tap zoom on touch devices
+      document.addEventListener('touchend', function (event) {
+        const now = Date.now();
+        const timeSinceLastTouch = now - lastTouchEnd;
+
+        // If two touches happen within 300ms, prevent default (double-tap zoom)
+        if (timeSinceLastTouch < 300) {
+          event.preventDefault();
+        }
+
+        lastTouchEnd = now;
+      }, { passive: false });
+
+      // Additional prevention: disable gesture zoom (iOS Safari)
+      document.addEventListener('gesturestart', function (event) {
+        event.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('gesturechange', function (event) {
+        event.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('gestureend', function (event) {
+        event.preventDefault();
+      }, { passive: false });
+    })();
+
     // ----------------------
     // Data
     // ----------------------
