@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Spelling Tester</title>
   <style>
     :root {
@@ -42,6 +42,8 @@
         radial-gradient(900px 700px at 50% 110%, rgba(255, 207, 90, .18), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
     }
 
     /* Floating blobs */
@@ -774,29 +776,47 @@
     @media (max-width: 768px) {
       .wrap {
         padding: 16px 12px 60px;
+        padding-bottom: max(60px, env(safe-area-inset-bottom, 60px));
       }
 
       .card {
         padding: 16px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .stage {
+        padding: 16px;
+        min-height: auto;
       }
 
       .stageTop {
-        gap: 8px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .stageTop > :first-child {
+        width: 100%;
       }
 
       .progressWrap {
         gap: 8px;
+        flex-wrap: wrap;
+        justify-content: space-between;
       }
 
       .progressWrap .iconBtn {
-        position: absolute;
-        right: 0;
+        position: static;
         display: flex !important;
+        flex-shrink: 0;
       }
 
       .progressText {
         font-size: 14px;
         white-space: nowrap;
+        flex: 1;
+        min-width: 0;
       }
 
       .word {
@@ -821,7 +841,8 @@
       }
 
       #filterSelect {
-        min-width: 100%;
+        width: 100%;
+        min-width: 0;
         padding: 12px 14px;
         font-size: 14px;
       }
@@ -855,10 +876,17 @@
     @media (max-width: 480px) {
       .wrap {
         padding: 12px 8px 50px;
+        padding-bottom: max(50px, env(safe-area-inset-bottom, 50px));
       }
 
       .card {
         padding: 14px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .stage {
+        padding: 12px;
       }
 
       .word {
