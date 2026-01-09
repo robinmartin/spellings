@@ -558,6 +558,43 @@
       stroke: rgba(255, 255, 255, 1);
     }
 
+    #startNewBtn {
+      border: none;
+      background: transparent;
+      padding: 10px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      box-shadow: none;
+    }
+
+    #startNewBtn:hover {
+      background: transparent;
+      border: none;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #startNewBtn:active {
+      transform: scale(0.95);
+    }
+
+    #startNewBtn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    #startNewBtn svg {
+      width: 20px;
+      height: 20px;
+      stroke: rgba(255, 255, 255, .85);
+    }
+
+    #startNewBtn:hover svg {
+      stroke: rgba(255, 255, 255, 1);
+    }
+
     /* Ensure icon is visible on mobile */
     @media (max-width: 768px) {
       .iconBtn svg {
