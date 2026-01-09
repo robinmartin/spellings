@@ -455,39 +455,44 @@
     .stageTop {
       display: flex;
       flex-direction: row;
-      gap: 12px;
       align-items: center;
       width: 100%;
       position: relative;
+      justify-content: space-between;
     }
 
-    .stageTop> :first-child {
-      flex: 0 0 auto;
-    }
-
-    .progressWrap {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
+    .stageTopLeft,
+    .stageTopCenter,
+    .stageTopRight {
       flex: 1;
-      position: relative;
+      display: flex;
+      align-items: center;
     }
 
-    .progressWrap .iconBtn {
+    .stageTopLeft {
+      justify-content: flex-start;
+    }
+
+    .stageTopCenter {
+      justify-content: center;
       position: absolute;
-      right: 0;
-      display: flex !important;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .stageTopRight {
+      justify-content: flex-end;
     }
 
     .progressText {
       margin: 0;
+      pointer-events: auto;
     }
 
-    /* Desktop: show refresh button in stageTop */
-    .stageTop>.iconBtn {
-      display: flex;
+    #filterSelect {
+      padding: 10px 14px;
+      min-width: 0;
     }
 
     .iconBtn {
@@ -792,34 +797,22 @@
       }
 
       .stageTop {
-        flex-direction: row;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: nowrap;
+        justify-content: space-between;
       }
 
-      .stageTop > :first-child {
+      .stageTopLeft,
+      .stageTopRight {
         flex: 0 0 auto;
         min-width: 0;
       }
 
-      .progressWrap {
-        gap: 6px;
-        flex: 1;
-        min-width: 0;
-        justify-content: flex-end;
-      }
-
-      .progressWrap .iconBtn {
-        position: static;
-        display: flex !important;
-        flex-shrink: 0;
+      .stageTopCenter {
+        flex: 0 0 auto;
       }
 
       .progressText {
         font-size: 12px;
         white-space: nowrap;
-        flex-shrink: 0;
       }
 
       .progress {
@@ -848,17 +841,15 @@
       }
 
       #filterSelect {
-        flex: 0 0 auto;
-        min-width: 0;
-        max-width: 140px;
-        padding: 10px 12px;
-        padding-right: 32px;
-        font-size: 13px;
+        max-width: 100px;
+        padding: 8px 10px;
+        padding-right: 28px;
+        font-size: 12px;
       }
 
       .iconBtn {
-        width: 44px;
-        height: 44px;
+        width: 36px;
+        height: 36px;
       }
 
       .iconBtn svg {
@@ -903,10 +894,20 @@
       }
 
       #filterSelect {
-        max-width: 120px;
-        padding: 8px 10px;
-        padding-right: 28px;
-        font-size: 12px;
+        max-width: 90px;
+        padding: 8px 8px;
+        padding-right: 24px;
+        font-size: 11px;
+      }
+
+      .iconBtn {
+        width: 32px;
+        height: 32px;
+      }
+
+      .iconBtn svg {
+        width: 16px;
+        height: 16px;
       }
 
       .progressText {
@@ -971,15 +972,15 @@
   <main class="wrap">
     <section class="card stage" id="stagePane" aria-live="polite">
       <div class="stageTop">
-        <select id="filterSelect" class="btn" style="padding: 10px 14px; min-width: 200px;">
-          <option value="all">All Words</option>
-        </select>
-        <div class="progressWrap">
+        <div class="stageTopLeft">
+          <select id="filterSelect" class="btn">
+            <option value="all">All Words</option>
+          </select>
+        </div>
+        <div class="stageTopCenter">
           <div class="progressText" id="progressText">0 / 0</div>
-          <div class="progress" aria-label="Progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-            aria-valuenow="0">
-            <div class="bar" id="progressBar"></div>
-          </div>
+        </div>
+        <div class="stageTopRight">
           <button class="btn iconBtn" id="startNewBtn" type="button" aria-label="Start New">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 4V10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -990,6 +991,10 @@
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
+        </div>
+        <div class="progress" aria-label="Progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+          aria-valuenow="0" style="display: none;">
+          <div class="bar" id="progressBar"></div>
         </div>
       </div>
 
