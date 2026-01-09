@@ -1260,39 +1260,6 @@
 
   <script>
     // ----------------------
-    // Prevent double-tap zoom
-    // ----------------------
-    (function () {
-      let lastTouchEnd = 0;
-
-      // Prevent double-tap zoom on touch devices
-      document.addEventListener('touchend', function (event) {
-        const now = Date.now();
-        const timeSinceLastTouch = now - lastTouchEnd;
-
-        // If two touches happen within 300ms, prevent default (double-tap zoom)
-        if (timeSinceLastTouch < 300) {
-          event.preventDefault();
-        }
-
-        lastTouchEnd = now;
-      }, { passive: false });
-
-      // Additional prevention: disable gesture zoom (iOS Safari)
-      document.addEventListener('gesturestart', function (event) {
-        event.preventDefault();
-      }, { passive: false });
-
-      document.addEventListener('gesturechange', function (event) {
-        event.preventDefault();
-      }, { passive: false });
-
-      document.addEventListener('gestureend', function (event) {
-        event.preventDefault();
-      }, { passive: false });
-    })();
-
-    // ----------------------
     // Data
     // ----------------------
     let WORDS_DATA = null;
