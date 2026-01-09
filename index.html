@@ -27,7 +27,8 @@
 
     html,
     body {
-      height: 100%
+      height: 100%;
+      touch-action: manipulation;
     }
 
     [hidden] {
@@ -655,6 +656,7 @@
       text-align: center;
       word-break: break-word;
       hyphens: auto;
+      touch-action: manipulation;
     }
 
     @keyframes wordIn {
@@ -857,7 +859,7 @@
         min-width: 0;
         max-width: 140px;
         padding: 8px 8px;
-        padding-right: 24px;
+        padding-right: 34px;
         font-size: 11px;
       }
 
@@ -908,15 +910,15 @@
       }
 
       .stageTopLeft {
-        max-width: 118px;
+        max-width: 198px;
       }
 
       #filterSelect {
         width: 100%;
         min-width: 0;
-        max-width: 118px;
+        max-width: 198px;
         padding: 8px 6px;
-        padding-right: 22px;
+        padding-right: 30px;
         font-size: 10px;
       }
 
@@ -935,7 +937,7 @@
       }
 
       .word {
-        font-size: 44px;
+        font-size: 42px;
         letter-spacing: -0.3px;
       }
 
@@ -973,6 +975,55 @@
 
       .progress {
         height: 8px;
+      }
+    }
+
+    /* Landscape orientation on mobile devices */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .wrap {
+        padding: 16px 12px;
+        align-items: center;
+      }
+
+      .card {
+        max-height: 80svh;
+        overflow-y: auto;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stage {
+        padding: 12px 16px 24px 16px;
+        min-height: auto;
+        justify-content: space-between;
+        gap: 16px;
+        box-sizing: border-box;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stageTop {
+        flex-shrink: 0;
+        margin-bottom: auto;
+        padding: 0;
+      }
+
+      .wordBox {
+        flex-shrink: 0;
+      }
+
+      .nav {
+        padding-top: 0px;
+        padding-bottom: 0;
+        margin-top: auto;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+
+      .navBtnContainer {
+        margin-bottom: 0;
       }
     }
 
@@ -1273,6 +1324,18 @@
       const word = document.createElement("div");
       word.className = "word";
       word.textContent = w;
+
+      // Add click handler to progress to next word if available
+      word.addEventListener("click", () => {
+        if (index < order.length - 1) {
+          index++;
+          renderWord();
+        }
+      });
+
+      // Add cursor pointer style to indicate it's clickable
+      word.style.cursor = index < order.length - 1 ? "pointer" : "default";
+
       el.wordArea.appendChild(word);
 
       progress();
@@ -1562,10 +1625,10 @@
         el.filterSelect.appendChild(option);
       });
 
-      // Set default to "au1" if available, otherwise "all"
-      if (availableFilters.includes("au1")) {
-        selectedFilter = "au1";
-        el.filterSelect.value = "au1";
+      // Set default to "sp1" if available, otherwise "all"
+      if (availableFilters.includes("sp1")) {
+        selectedFilter = "sp1";
+        el.filterSelect.value = "sp1";
       } else {
         selectedFilter = "all";
         el.filterSelect.value = "all";
@@ -1589,7 +1652,7 @@
 
 
     // Init
-    selectedFilter = "au1"; // Default to Autumn 1
+    selectedFilter = "sp1"; // Default to Spring 1
     loadWords();
     // Start immediately after words are loaded
     // Use a small delay to ensure DOM and filters are ready
