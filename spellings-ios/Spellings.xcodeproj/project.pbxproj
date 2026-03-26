@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		159852ED75F5F453A1A8E79C /* SpellingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E43973F62FDFE176B972E25 /* SpellingsTests.swift */; };
 		322B24BFCDBAFB927BA44C5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC2F221780D9F18B181E04 /* Preview Assets.xcassets */; };
 		4D72B6EA0EC35A627052441C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41973E8A8448F866CC4122C4 /* ContentView.swift */; };
+		78383D79D6220B96DCCE2E9B /* WordEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CF3BA371D1B7F33B70C411 /* WordEntry.swift */; };
+		79E0900E099048467E2EF9BF /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D09E15AD711ED6CBB28D82 /* SessionState.swift */; };
 		844767008BBF4A0839500464 /* SpellingsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E68D870A4408F8FB9FAA599 /* SpellingsApp.swift */; };
+		95F6251DED78CB3F5F373B70 /* WordFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2F211595B56935B88AE95 /* WordFilterTests.swift */; };
 		96F88B1626264D2841A3330C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3CBBE67AA1A5B17F4C3CD04 /* Assets.xcassets */; };
+		BF7FFEB3CCC189C27B52F6E1 /* WordFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E0C2ACF03842954155936E /* WordFilter.swift */; };
+		D47778634D97CE7B7B4E2F1E /* SpellingSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */; };
 		E35BC48EA388BF21563679C7 /* words.json in Resources */ = {isa = PBXBuildFile; fileRef = 55827418A114D9E4FE9C5722 /* words.json */; };
 /* End PBXBuildFile section */
 
@@ -26,21 +30,35 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03CF3BA371D1B7F33B70C411 /* WordEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordEntry.swift; sourceTree = "<group>"; };
 		1913C675F1E17EC76E365BD7 /* SpellingsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SpellingsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E43973F62FDFE176B972E25 /* SpellingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellingsTests.swift; sourceTree = "<group>"; };
+		19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellingSessionStore.swift; sourceTree = "<group>"; };
 		41973E8A8448F866CC4122C4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		55827418A114D9E4FE9C5722 /* words.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = words.json; sourceTree = "<group>"; };
 		5E68D870A4408F8FB9FAA599 /* SpellingsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellingsApp.swift; sourceTree = "<group>"; };
+		77E0C2ACF03842954155936E /* WordFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFilter.swift; sourceTree = "<group>"; };
+		7DB2F211595B56935B88AE95 /* WordFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFilterTests.swift; sourceTree = "<group>"; };
 		8D340A415D6719A67D692EC8 /* Spellings.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Spellings.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3CBBE67AA1A5B17F4C3CD04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D8D09E15AD711ED6CBB28D82 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		E1BC2F221780D9F18B181E04 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		14F90B6D0E203463E00FD721 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D8D09E15AD711ED6CBB28D82 /* SessionState.swift */,
+				03CF3BA371D1B7F33B70C411 /* WordEntry.swift */,
+				77E0C2ACF03842954155936E /* WordFilter.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		1B6BAB5434B8FA25B98160C1 /* SpellingsTests */ = {
 			isa = PBXGroup;
 			children = (
-				1E43973F62FDFE176B972E25 /* SpellingsTests.swift */,
+				7DB2F211595B56935B88AE95 /* WordFilterTests.swift */,
 			);
 			path = SpellingsTests;
 			sourceTree = "<group>";
@@ -69,9 +87,19 @@
 				41973E8A8448F866CC4122C4 /* ContentView.swift */,
 				5E68D870A4408F8FB9FAA599 /* SpellingsApp.swift */,
 				55827418A114D9E4FE9C5722 /* words.json */,
+				14F90B6D0E203463E00FD721 /* Models */,
 				2A9429B4D7D64D1356FAB93E /* Preview Content */,
+				3D9EAB726117EB6AE4414024 /* Stores */,
 			);
 			path = Spellings;
+			sourceTree = "<group>";
+		};
+		3D9EAB726117EB6AE4414024 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */,
+			);
+			path = Stores;
 			sourceTree = "<group>";
 		};
 		E06AE621855B946AC28D9CEB /* Products */ = {
@@ -172,7 +200,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D72B6EA0EC35A627052441C /* ContentView.swift in Sources */,
+				79E0900E099048467E2EF9BF /* SessionState.swift in Sources */,
+				D47778634D97CE7B7B4E2F1E /* SpellingSessionStore.swift in Sources */,
 				844767008BBF4A0839500464 /* SpellingsApp.swift in Sources */,
+				78383D79D6220B96DCCE2E9B /* WordEntry.swift in Sources */,
+				BF7FFEB3CCC189C27B52F6E1 /* WordFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,7 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				159852ED75F5F453A1A8E79C /* SpellingsTests.swift in Sources */,
+				95F6251DED78CB3F5F373B70 /* WordFilterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +232,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Spellings;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -211,6 +245,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robinmartin.spellings;
 				PRODUCT_NAME = Spellings;
 				SDKROOT = iphoneos;
@@ -343,6 +378,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -350,6 +386,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robinmartin.spellingsTests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -362,7 +399,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Spellings;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -373,6 +412,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robinmartin.spellings;
 				PRODUCT_NAME = Spellings;
 				SDKROOT = iphoneos;
@@ -386,6 +426,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -393,6 +434,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.robinmartin.spellingsTests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
