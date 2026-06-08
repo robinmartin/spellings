@@ -7,15 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2439E565F6CB2A38E105F775 /* SpeechCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBCF9E4AAFD6C6126931504 /* SpeechCoordinatorTests.swift */; };
+		2D1DF1F206423E16A3C65726 /* SelfAssessSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356A9468EFB60E9513AC96E /* SelfAssessSession.swift */; };
 		322B24BFCDBAFB927BA44C5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC2F221780D9F18B181E04 /* Preview Assets.xcassets */; };
+		3A493648DA3DD53135E95F3C /* AppSessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D033A7A2BA392077FD9D73 /* AppSessionStateTests.swift */; };
 		4D72B6EA0EC35A627052441C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41973E8A8448F866CC4122C4 /* ContentView.swift */; };
+		73E92ACC33C01AA20B88B5B2 /* SelfAssessAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A67FBC3E2147AE801B1D37 /* SelfAssessAnswer.swift */; };
+		75C19A6586E782E3506221C6 /* SelfAssessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D1E9449935795D29835624 /* SelfAssessResult.swift */; };
 		78383D79D6220B96DCCE2E9B /* WordEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CF3BA371D1B7F33B70C411 /* WordEntry.swift */; };
 		79E0900E099048467E2EF9BF /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D09E15AD711ED6CBB28D82 /* SessionState.swift */; };
 		844767008BBF4A0839500464 /* SpellingsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E68D870A4408F8FB9FAA599 /* SpellingsApp.swift */; };
 		95F6251DED78CB3F5F373B70 /* WordFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2F211595B56935B88AE95 /* WordFilterTests.swift */; };
 		96F88B1626264D2841A3330C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3CBBE67AA1A5B17F4C3CD04 /* Assets.xcassets */; };
+		AC1933F94FC7269672ABF363 /* AppSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8898A300B2C2A73501A088E /* AppSessionState.swift */; };
 		BF7FFEB3CCC189C27B52F6E1 /* WordFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E0C2ACF03842954155936E /* WordFilter.swift */; };
+		CA11AC248538E9A2A48BB0A7 /* SelfAssessSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7067B26BF8912768D1C3AE9 /* SelfAssessSessionTests.swift */; };
 		D47778634D97CE7B7B4E2F1E /* SpellingSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */; };
+		E0E9822608043A52F2E5638B /* PracticeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23791901821E27765D22EA8D /* PracticeMode.swift */; };
 		E35BC48EA388BF21563679C7 /* words.json in Resources */ = {isa = PBXBuildFile; fileRef = 55827418A114D9E4FE9C5722 /* words.json */; };
 /* End PBXBuildFile section */
 
@@ -33,21 +41,33 @@
 		03CF3BA371D1B7F33B70C411 /* WordEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordEntry.swift; sourceTree = "<group>"; };
 		1913C675F1E17EC76E365BD7 /* SpellingsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SpellingsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellingSessionStore.swift; sourceTree = "<group>"; };
+		23791901821E27765D22EA8D /* PracticeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeMode.swift; sourceTree = "<group>"; };
 		41973E8A8448F866CC4122C4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		55827418A114D9E4FE9C5722 /* words.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = words.json; sourceTree = "<group>"; };
+		57D1E9449935795D29835624 /* SelfAssessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfAssessResult.swift; sourceTree = "<group>"; };
 		5E68D870A4408F8FB9FAA599 /* SpellingsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellingsApp.swift; sourceTree = "<group>"; };
 		77E0C2ACF03842954155936E /* WordFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFilter.swift; sourceTree = "<group>"; };
 		7DB2F211595B56935B88AE95 /* WordFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFilterTests.swift; sourceTree = "<group>"; };
+		8BBCF9E4AAFD6C6126931504 /* SpeechCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechCoordinatorTests.swift; sourceTree = "<group>"; };
 		8D340A415D6719A67D692EC8 /* Spellings.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Spellings.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9356A9468EFB60E9513AC96E /* SelfAssessSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfAssessSession.swift; sourceTree = "<group>"; };
+		A5D033A7A2BA392077FD9D73 /* AppSessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionStateTests.swift; sourceTree = "<group>"; };
+		A7067B26BF8912768D1C3AE9 /* SelfAssessSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfAssessSessionTests.swift; sourceTree = "<group>"; };
+		B8898A300B2C2A73501A088E /* AppSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSessionState.swift; sourceTree = "<group>"; };
 		C3CBBE67AA1A5B17F4C3CD04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8D09E15AD711ED6CBB28D82 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		E1BC2F221780D9F18B181E04 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F3A67FBC3E2147AE801B1D37 /* SelfAssessAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfAssessAnswer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		14F90B6D0E203463E00FD721 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B8898A300B2C2A73501A088E /* AppSessionState.swift */,
+				23791901821E27765D22EA8D /* PracticeMode.swift */,
+				F3A67FBC3E2147AE801B1D37 /* SelfAssessAnswer.swift */,
+				57D1E9449935795D29835624 /* SelfAssessResult.swift */,
 				D8D09E15AD711ED6CBB28D82 /* SessionState.swift */,
 				03CF3BA371D1B7F33B70C411 /* WordEntry.swift */,
 				77E0C2ACF03842954155936E /* WordFilter.swift */,
@@ -58,6 +78,9 @@
 		1B6BAB5434B8FA25B98160C1 /* SpellingsTests */ = {
 			isa = PBXGroup;
 			children = (
+				A5D033A7A2BA392077FD9D73 /* AppSessionStateTests.swift */,
+				A7067B26BF8912768D1C3AE9 /* SelfAssessSessionTests.swift */,
+				8BBCF9E4AAFD6C6126931504 /* SpeechCoordinatorTests.swift */,
 				7DB2F211595B56935B88AE95 /* WordFilterTests.swift */,
 			);
 			path = SpellingsTests;
@@ -97,6 +120,7 @@
 		3D9EAB726117EB6AE4414024 /* Stores */ = {
 			isa = PBXGroup;
 			children = (
+				9356A9468EFB60E9513AC96E /* SelfAssessSession.swift */,
 				19508FB99B1FF25385DC72F7 /* SpellingSessionStore.swift */,
 			);
 			path = Stores;
@@ -159,6 +183,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					8895D67CF4CEF1DE59E955FA = {
+						DevelopmentTeam = DT48ZM7972;
+					};
 				};
 			};
 			buildConfigurationList = 4C0513EF8C5AC328FE5BCBA7 /* Build configuration list for PBXProject "Spellings" */;
@@ -199,7 +226,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC1933F94FC7269672ABF363 /* AppSessionState.swift in Sources */,
 				4D72B6EA0EC35A627052441C /* ContentView.swift in Sources */,
+				E0E9822608043A52F2E5638B /* PracticeMode.swift in Sources */,
+				73E92ACC33C01AA20B88B5B2 /* SelfAssessAnswer.swift in Sources */,
+				75C19A6586E782E3506221C6 /* SelfAssessResult.swift in Sources */,
+				2D1DF1F206423E16A3C65726 /* SelfAssessSession.swift in Sources */,
 				79E0900E099048467E2EF9BF /* SessionState.swift in Sources */,
 				D47778634D97CE7B7B4E2F1E /* SpellingSessionStore.swift in Sources */,
 				844767008BBF4A0839500464 /* SpellingsApp.swift in Sources */,
@@ -212,6 +244,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A493648DA3DD53135E95F3C /* AppSessionStateTests.swift in Sources */,
+				CA11AC248538E9A2A48BB0A7 /* SelfAssessSessionTests.swift in Sources */,
+				2439E565F6CB2A38E105F775 /* SpeechCoordinatorTests.swift in Sources */,
 				95F6251DED78CB3F5F373B70 /* WordFilterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -233,6 +268,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DT48ZM7972;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Spellings;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -400,6 +436,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DT48ZM7972;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Spellings;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

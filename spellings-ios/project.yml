@@ -21,6 +21,7 @@ targets:
         SWIFT_VERSION: "5.0"
         GENERATE_INFOPLIST_FILE: YES
         CURRENT_PROJECT_VERSION: "1"
+        DEVELOPMENT_TEAM: DT48ZM7972
         MARKETING_VERSION: "1.0"
         INFOPLIST_KEY_CFBundleDisplayName: Spellings
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES

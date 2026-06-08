@@ -3,17 +3,33 @@ import Foundation
 @MainActor
 final class SpellingSessionStore: ObservableObject {
     @Published private(set) var entries: [WordEntry] = []
-    @Published var selectedFilter: WordFilter = .all {
+    @Published var selectedMode: PracticeMode = .twoPerson {
         didSet {
-            guard selectedFilter != oldValue else { return }
-            resetSession()
+            guard selectedMode != oldValue, hasLoadedWords, !isRestoringState else { return }
+            ensureSessionForCurrentMode()
+            saveState()
         }
     }
-    @Published private(set) var order: [String] = []
-    @Published private(set) var index = 0
+    @Published var twoPersonFilter: WordFilter = .all {
+        didSet {
+            guard twoPersonFilter != oldValue, hasLoadedWords, !isRestoringState else { return }
+            startTwoPersonSession()
+        }
+    }
+    @Published var selfAssessFilter: WordFilter = .all {
+        didSet {
+            guard selfAssessFilter != oldValue, hasLoadedWords, !isRestoringState else { return }
+            startSelfAssessSession()
+        }
+    }
+    @Published private(set) var twoPersonOrder: [String] = []
+    @Published private(set) var twoPersonIndex = 0
+    @Published private(set) var selfAssessSession: SelfAssessSession?
 
     private let userDefaults: UserDefaults
     private let storageKey = "spellingTesterState"
+    private var hasLoadedWords = false
+    private var isRestoringState = false
 
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
@@ -23,23 +39,23 @@ final class SpellingSessionStore: ObservableObject {
         [.all, .learned, .notLearned, .au1, .au2, .sp1, .sp2, .su1, .su2, .ex1, .ex2]
     }
 
-    var currentWord: String? {
-        guard order.indices.contains(index) else { return nil }
-        return order[index]
+    var twoPersonCurrentWord: String? {
+        guard twoPersonOrder.indices.contains(twoPersonIndex) else { return nil }
+        return twoPersonOrder[twoPersonIndex]
     }
 
-    var progressText: String {
-        let total = order.count
+    var twoPersonProgressText: String {
+        let total = twoPersonOrder.count
         guard total > 0 else { return "0 / 0" }
-        return "\(min(total, max(1, index + 1))) / \(total)"
+        return "\(min(total, max(1, twoPersonIndex + 1))) / \(total)"
     }
 
     var canGoPrevious: Bool {
-        index > 0
+        twoPersonIndex > 0
     }
 
     var canGoNext: Bool {
-        index < order.count - 1
+        twoPersonIndex < twoPersonOrder.count - 1
     }
 
     func loadWords() throws {
@@ -50,82 +66,183 @@ final class SpellingSessionStore: ObservableObject {
 
         let data = try Data(contentsOf: url)
         entries = try JSONDecoder().decode([WordEntry].self, from: data)
+        hasLoadedWords = true
 
-        let savedState = loadState()
-        if let savedState {
-            selectedFilter = savedState.filter
+        let defaultFilter = preferredDefaultFilter()
+        isRestoringState = true
+        twoPersonFilter = defaultFilter
+        selfAssessFilter = defaultFilter
+        isRestoringState = false
+
+        if let savedState = loadState() {
             restore(savedState)
-            return
-        }
-
-        if availableFilters.contains(.su1) {
-            selectedFilter = .su1
         } else {
-            selectedFilter = .all
+            startTwoPersonSession()
         }
-        startSession()
     }
 
     func goPrevious() {
         guard canGoPrevious else { return }
-        index -= 1
+        twoPersonIndex -= 1
         saveState()
     }
 
     func goNext() {
         guard canGoNext else { return }
-        index += 1
+        twoPersonIndex += 1
         saveState()
     }
 
-    func startNewSession() {
-        clearState()
-        startSession()
+    func startNewTwoPersonSession() {
+        startTwoPersonSession()
     }
 
-    func resetSession() {
-        startSession()
+    func startNewSelfAssessSession() {
+        startSelfAssessSession()
     }
 
-    private func startSession() {
-        let words = selectedFilter.filteredWords(from: entries)
-        guard !words.isEmpty else {
-            order = []
-            index = 0
+    func updateSelfAssessDraft(_ text: String) {
+        selfAssessSession?.updateDraft(text)
+        saveState()
+    }
+
+    func goToPreviousSelfAssessWord() {
+        selfAssessSession?.goPrevious()
+        saveState()
+    }
+
+    func goToNextSelfAssessWord() {
+        selfAssessSession?.goNext()
+        saveState()
+    }
+
+    @discardableResult
+    func completeSelfAssessTest() -> SelfAssessResult? {
+        let result = selfAssessSession?.completeTest()
+        saveState()
+        return result
+    }
+
+    private func preferredDefaultFilter() -> WordFilter {
+        availableFilters.contains(.su1) ? .su1 : .all
+    }
+
+    private func ensureSessionForCurrentMode() {
+        switch selectedMode {
+        case .twoPerson:
+            if twoPersonOrder.isEmpty {
+                startTwoPersonSession()
+            }
+        case .selfAssess:
+            if selfAssessSession == nil {
+                startSelfAssessSession()
+            }
+        }
+    }
+
+    private func startTwoPersonSession() {
+        let words = twoPersonFilter.filteredWords(from: entries)
+        twoPersonOrder = words.shuffled()
+        twoPersonIndex = 0
+        saveState()
+    }
+
+    private func startSelfAssessSession() {
+        let words = selfAssessFilter.filteredWords(from: entries)
+        selfAssessSession = SelfAssessSession(
+            filter: selfAssessFilter,
+            order: words.shuffled()
+        )
+        saveState()
+    }
+
+    private func restore(_ appState: AppSessionState) {
+        isRestoringState = true
+        selectedMode = appState.selectedMode
+        isRestoringState = false
+
+        restoreTwoPerson(appState.twoPersonSession)
+        restoreSelfAssess(appState.selfAssessSession)
+        ensureSessionForCurrentMode()
+        saveState()
+    }
+
+    private func restoreTwoPerson(_ state: SessionState?) {
+        guard let state else {
+            twoPersonFilter = preferredDefaultFilter()
+            twoPersonOrder = []
+            twoPersonIndex = 0
             return
         }
 
-        order = words.shuffled()
-        index = 0
-        saveState()
-    }
+        let validWords = Set(state.filter.filteredWords(from: entries))
+        let isValidOrder = state.order.allSatisfy { validWords.contains($0) }
+        let isValidIndex = state.index >= 0 && state.index < max(state.order.count, 1)
 
-    private func restore(_ state: SessionState) {
-        let validWords = Set(selectedFilter.filteredWords(from: entries))
-        let isValidOrder = !state.order.isEmpty && state.order.allSatisfy { validWords.contains($0) }
-
-        guard isValidOrder, state.index >= 0, state.index < state.order.count else {
-            startSession()
+        guard isValidOrder, isValidIndex else {
+            twoPersonFilter = state.filter
+            twoPersonOrder = []
+            twoPersonIndex = 0
             return
         }
 
-        order = state.order
-        index = state.index
-        saveState()
+        twoPersonFilter = state.filter
+        twoPersonOrder = state.order
+        twoPersonIndex = state.index
+    }
+
+    private func restoreSelfAssess(_ state: SelfAssessSession.State?) {
+        guard let state else {
+            selfAssessFilter = preferredDefaultFilter()
+            selfAssessSession = nil
+            return
+        }
+
+        let validWords = Set(state.filter.filteredWords(from: entries))
+        let isValidOrder = state.order.allSatisfy { validWords.contains($0) }
+        let isValidIndex = state.currentIndex >= 0 && state.currentIndex <= state.order.count
+        let isValidAnswers = Set(state.answers.keys).isSubset(of: Set(state.order))
+
+        guard isValidOrder, isValidIndex, isValidAnswers else {
+            selfAssessFilter = state.filter
+            selfAssessSession = nil
+            return
+        }
+
+        selfAssessFilter = state.filter
+        let answers = state.answers.mapValues { response in
+            SelfAssessAnswer(word: "", response: response, correctSpelling: "")
+        }
+        let rebuiltAnswers = Dictionary(uniqueKeysWithValues: answers.map { key, value in
+            (key, SelfAssessAnswer(word: key, response: value.response, correctSpelling: key))
+        })
+        let session = SelfAssessSession(
+            filter: state.filter,
+            order: state.order,
+            currentIndex: state.currentIndex,
+            answers: rebuiltAnswers,
+            draft: state.draft,
+            isComplete: state.isComplete
+        )
+        if state.isComplete {
+            _ = session.completeTest()
+        }
+        selfAssessSession = session
     }
 
     private func saveState() {
-        let state = SessionState(filter: selectedFilter, order: order, index: index)
+        guard hasLoadedWords else { return }
+        let state = AppSessionState(
+            selectedMode: selectedMode,
+            twoPersonSession: SessionState(filter: twoPersonFilter, order: twoPersonOrder, index: twoPersonIndex),
+            selfAssessSession: selfAssessSession?.state
+        )
         guard let data = try? JSONEncoder().encode(state) else { return }
         userDefaults.set(data, forKey: storageKey)
     }
 
-    private func loadState() -> SessionState? {
+    private func loadState() -> AppSessionState? {
         guard let data = userDefaults.data(forKey: storageKey) else { return nil }
-        return try? JSONDecoder().decode(SessionState.self, from: data)
-    }
-
-    private func clearState() {
-        userDefaults.removeObject(forKey: storageKey)
+        return try? JSONDecoder().decode(AppSessionState.self, from: data)
     }
 }
